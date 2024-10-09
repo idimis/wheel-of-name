@@ -12,13 +12,13 @@ const WheelOfFortune = () => {
     const form = e.target as HTMLFormElement;
     const input = form.elements.namedItem("name") as HTMLInputElement;
     const name = input.value.trim();
-
+    
     // Generate a random color for the pie slice
     const randomColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
 
     if (name && !names.some(item => item.name === name) && names.length < 30) {
       setNames([...names, { name, color: randomColor }]);
-      input.value = ""; // Clear input field after adding
+      input.value = "";
     }
   };
 
@@ -67,26 +67,23 @@ const WheelOfFortune = () => {
             transform: `rotate(${isSpinning ? Math.random() * 360 + 720 : 0}deg)`,
           }}
         >
-          {names.map((item, index) => {
-            const angle = (360 / names.length) * index;
-            const nextAngle = (360 / names.length) * (index + 1);
-            return (
-              <div
-                key={index}
-                className="absolute w-full h-full"
-                style={{
-                  clipPath: `polygon(50% 50%, 100% 0%, 100% ${angle}deg, 100% ${nextAngle}deg)`,
-                  backgroundColor: item.color,
-                  transformOrigin: "50% 50%",
-                  zIndex: 1,
-                }}
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-lg font-bold text-white">{item.name}</span>
-                </div>
+          {names.map((item, index) => (
+            <div
+              key={index}
+              className="absolute w-full h-full"
+              style={{
+                clipPath: `polygon(50% 50%, ${100 * Math.sin((Math.PI * 2 * index) / names.length)}% ${100 * Math.cos((Math.PI * 2 * index) / names.length)}%, ${100 * Math.sin((Math.PI * 2 * (index + 1)) / names.length)}% ${100 * Math.cos((Math.PI * 2 * (index + 1)) / names.length)}%)`,
+                backgroundColor: item.color,
+                transformOrigin: "50% 50%",
+                zIndex: 1,
+                transition: "transform 3s ease-out"
+              }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="text-lg font-bold text-white">{item.name}</span>
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
       </div>
 
